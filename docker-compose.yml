@@ -1,0 +1,33 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"  # Фронтенд работает на порту 3000
+    networks:
+      - mynetwork
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "4000:4000"  # Бэкенд работает на порту 4000
+    networks:
+      - mynetwork
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"  # Nginx работает на порту 80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Привязка конфигурации
+    networks:
+      - mynetwork
+    depends_on:
+      - frontend
+      - backend
+
+networks:
+  mynetwork:
+    driver: bridge
